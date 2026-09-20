@@ -2,7 +2,8 @@ import { OpenAI } from "openai";
 import { CLASSIFIER_SYSTEM_PROMPT } from "../prompts/systemPrompt.js";
 import { ASSISTANT_SYSTEM_PROMPT } from "../prompts/assistantPrompt.js";
 import { env } from "../config/env.js";
-import { extractJSON } from "../utils/extractJSON.js";
+import { extractAndValidateJSON } from "../utils/extractJSON.js";
+import { ClassifierSchema, AssistantSchema } from "../schemas/aiSchemas.js";
 
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
@@ -31,7 +32,7 @@ export const classifyTicketService = async (ticketText: string) => {
 
   const rawContent = completion.choices[0]?.message?.content || "{}";
 
-  return extractJSON(rawContent);
+  return extractAndValidateJSON(rawContent, ClassifierSchema);
 };
 
 export const generateReplyService = async (ticketText: string) => {
@@ -52,5 +53,5 @@ export const generateReplyService = async (ticketText: string) => {
 
   const rawContent = completion.choices[0]?.message?.content || "{}";
 
-  return extractJSON(rawContent);
+  return extractAndValidateJSON(rawContent, AssistantSchema);
 };
