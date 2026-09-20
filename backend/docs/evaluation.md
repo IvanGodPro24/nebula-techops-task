@@ -11,18 +11,18 @@ For this MVP, the architecture is separated into a **React/Vite Frontend** and a
    - *Speed:* Moderate.
    - *Cost:* Free.
    - *Verdict:* **Chosen for MVP** to demonstrate functionality without incurring costs during the review phase.
-2. **GPT-4o-mini (OpenAI)**
-   - *Quality:* Exceptional JSON adherence, highly accurate nuanced context understanding.
-   - *Speed:* Very fast.
-   - *Cost:* Extremely cheap (~$0.15/1M input tokens).
+2. **GPT-5.6 Luna (OpenAI)**
+   - *Quality:* Exceptional JSON adherence, native compatibility with strict Zod schemas, and a highly updated knowledge base.
+   - *Speed:* Fast with predictable latency.
+   - *Cost:* Highly cost-effective (~$0.20/1M input tokens) for production scale.
    - *Verdict:* **Recommended for Production**.
-3. **Claude 3 Haiku (Anthropic)**
+3. **Claude Haiku 4.5 (Anthropic)**
    - *Quality:* Excellent at following nuanced instructions and generating empathetic responses. Reliable JSON output.
    - *Speed:* Exceptionally fast.
-   - *Cost:* Very affordable (~$0.25/1M input tokens).
+   - *Cost:* Highly cost-effective (~$0.25/1M input tokens).
    - *Verdict:* **Strong Alternative for Production**, especially if the primary focus shifts towards the quality of the generated empathetic responses rather than pure cost optimization.
 
-*Note: The backend is structured using the standard `openai` SDK. Switching from Llama 3.1 to GPT-4o-mini for production only requires changing the model string and the base URL in `ai.service.ts`.*
+*Note: The backend is structured using the standard `openai` SDK. Switching from Llama 3.1 to GPT-5.6 Luna for production only requires changing the model string and the base URL in `ai.service.ts`.*
 
 ---
 
@@ -33,6 +33,14 @@ For this MVP, the architecture is separated into a **React/Vite Frontend** and a
 I manually defined the categories (`Billing_and_Subscription`, `Refund_Request`, `Technical_Bug`, `Complaint_Expert`, `General_Inquiry`) based on business priorities.
 
 **Decision made by me:** I explicitly programmed a strict evaluation hierarchy. The AI is not allowed to guess what is more important; it is strictly instructed via a step-by-step algorithm that *Financial requests (Refunds) take absolute priority over bugs or complaints.*
+
+### Automated Evaluation & Metrics
+
+To ensure the classifier behaves predictably across edge cases and to prevent regressions when tuning prompts, I implemented an automated test script (`npm run eval`).
+
+- **Test Dataset:** Covers critical edge cases (mental health crises, aggressive tone, complex refunds vs. billing inquiries).
+- **Current Accuracy:** `100.0% (7/7 passed)` on the baseline dataset.
+- **Validation:** Implemented strict schema validation using `Zod`. The application no longer trusts the LLM blindly; if the model hallucinates a category or omits a field, the code catches it and triggers a fallback.
 
 ### Prompt Evolution & Edge Cases
 
@@ -91,16 +99,28 @@ The AI output schema includes a `requires_human` boolean flag and a `human_reaso
 2. **Timeout Handling:** Model generation occasionally exceeded standard limits. Implemented a `30000ms` timeout block. If the LLM fails, the controller catches the error gracefully and defaults the frontend to a manual review fallback.
 3. **Rate Limits:** To be mitigated in production using Exponential Backoff algorithms (e.g., `axios-retry` or native Node queues like `BullMQ`).
 
+### System Architecture
+
+**Important Note on Architecture:**
+This repository is designed as a Proof of Concept (PoC) to demonstrate the capabilities of two distinct tasks independently (Classifier vs. Assistant).
+
+**Production Implementation:**
+In a real-world production environment, these two tasks would **not** be isolated endpoints. Calling the LLM twice for a single ticket doubles the latency and the token cost. Instead, they would be chained into a single asynchronous pipeline:
+
+1. The ticket arrives and is passed to the Classifier.
+2. If `priority === "Critical"`, it routes immediately to human agents (bypassing drafting).
+3. If valid for auto-reply, the same worker passes the ticket to the Assistant prompt to generate drafts.
+
 ### Cost Analysis (Forecast for 10,000 tickets/month)
 
-Assuming we switch to **gpt-4o-mini** for production:
+Assuming we switch to **GPT-5.6 Luna** for production:
 
 - Average input tokens (System prompt + ticket): ~300
 - Average output tokens (JSON generation): ~150
 - Total tokens per ticket: ~450
-- 10,000 tickets = 4.5 million tokens.
-- `gpt-4o-mini` pricing: ~$0.15/1M Input, ~$0.60/1M Output.
-- **Estimated Cost:** ~$0.45 (Input) + ~$0.90 (Output) = **~$1.35 per 10,000 tickets.**
+- 10,000 tickets = 3,000,000 input tokens and 1,500,000 output tokens.
+- `GPT-5.6 Luna` pricing: ~$0.20/1M Input, ~$1.20/1M Output.
+- **Estimated Cost:** ~$0.60 (Input) + ~$1.80 (Output) = **~$2.40 per 10,000 tickets.**
 
 ### Caching Strategy
 
