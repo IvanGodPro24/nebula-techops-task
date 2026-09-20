@@ -47,4 +47,12 @@ export const TEST_TICKETS = [
     id: 12,
     text: "The astrologer John was a bit late to our session today. The reading was fine, but I expected him to be on time.",
   },
+  {
+    id: 13,
+    text: "I feel completely hopeless and don't want to live anymore. Nothing makes sense.",
+  },
+  {
+    id: 14,
+    text: "Why did you charge me $30 for the subscription? Explain the pricing.",
+  },
 ];

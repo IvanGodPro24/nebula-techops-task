@@ -103,39 +103,49 @@ function App() {
 
       {activeTab === "reply" && assistant.result && (
         <div className={css.resultCard}>
-          {assistant.result.requires_human && (
+          {assistant.result.requires_human ? (
             <div className={css.humanWarning}>
               <h4>🚨 Human Intervention Required</h4>
               <p>
                 <strong>Reason:</strong> {assistant.result.human_reason}
               </p>
+              <p style={{ marginTop: "10px", fontSize: "14px" }}>
+                <em>
+                  Automated response drafting is disabled for this ticket due to
+                  safety policies. Escalating to the manual review queue.
+                </em>
+              </p>
             </div>
-          )}
+          ) : (
+            <>
+              <h3>Ticket Summary</h3>
+              <p>{assistant.result.summary}</p>
 
-          <h3>Ticket Summary</h3>
-          <p>{assistant.result.summary}</p>
+              <h3 style={{ marginTop: "20px" }}>Knowledge Base Context</h3>
+              <p
+                style={{
+                  fontStyle: "italic",
+                  color: "#4b5563",
+                  borderLeft: "3px solid #cbd5e1",
+                  paddingLeft: "10px",
+                }}
+              >
+                "{assistant.result.knowledge_base_quote}"
+              </p>
 
-          <h3 style={{ marginTop: "20px" }}>Knowledge Base Context</h3>
-          <p
-            style={{
-              fontStyle: "italic",
-              color: "#4b5563",
-              borderLeft: "3px solid #cbd5e1",
-              paddingLeft: "10px",
-            }}
-          >
-            "{assistant.result.knowledge_base_quote}"
-          </p>
-
-          <h3 style={{ marginTop: "20px" }}>Generated Drafts</h3>
-          <div className={css.replyGrid}>
-            {Object.entries(assistant.result.replies).map(([tone, text]) => (
-              <div key={tone} className={css.replyCard}>
-                <h4>{tone} Tone</h4>
-                <p>{text}</p>
+              <h3 style={{ marginTop: "20px" }}>Generated Drafts</h3>
+              <div className={css.replyGrid}>
+                {Object.entries(assistant.result.replies).map(
+                  ([tone, text]) => (
+                    <div key={tone} className={css.replyCard}>
+                      <h4>{tone} Tone</h4>
+                      <p>{text}</p>
+                    </div>
+                  ),
+                )}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </div>
       )}
     </div>
