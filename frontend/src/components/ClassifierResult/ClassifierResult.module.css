@@ -1,0 +1,36 @@
+.resultCard {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #f9fafb;
+}
+
+.category {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.criticalPriority {
+  color: #7f1d1d;
+  background-color: #fee2e2;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: 1px solid #f87171;
+}
+
+.highPriority {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.mediumPriority {
+  color: #d97706;
+  font-weight: bold;
+}
+
+.lowPriority {
+  color: #16a34a;
+  font-weight: bold;
+}

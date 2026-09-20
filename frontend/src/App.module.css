@@ -41,29 +41,6 @@
   border-radius: 8px;
 }
 
-.resultCard {
-  margin-top: 24px;
-  padding: 24px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background-color: #f9fafb;
-}
-
-.highPriority {
-  color: #dc2626;
-  font-weight: bold;
-}
-
-.mediumPriority {
-  color: #d97706;
-  font-weight: bold;
-}
-
-.lowPriority {
-  color: #16a34a;
-  font-weight: bold;
-}
-
 .testTickets {
   margin-bottom: 20px;
   display: flex;
@@ -104,47 +81,4 @@
   background-color: #e0e7ff;
   color: #4338ca;
   border-color: #4338ca;
-}
-
-.humanWarning {
-  background-color: #fef2f2;
-  border-left: 4px solid #ef4444;
-  padding: 16px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-}
-
-.humanWarning h4 {
-  margin: 0 0 8px 0;
-  color: #b91c1c;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.replyGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.replyCard {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.replyCard h4 {
-  margin: 0 0 8px 0;
-  text-transform: capitalize;
-  color: #374151;
-}
-
-.replyCard p {
-  margin: 0;
-  color: #4b5563;
-  font-size: 15px;
-  line-height: 1.5;
 }
