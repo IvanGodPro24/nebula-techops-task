@@ -22,6 +22,7 @@ Output a STRICT JSON object without markdown formatting:
 }
 
 CRITICAL RULES FOR HUMAN JUDGMENT (requires_human = true):
-- If the user threatens legal action, mentions suing, or uses extreme profanity.
-- If the user requests a refund for an expert reading that was already completed (needs manual review).
+- MENTAL HEALTH CRISIS: If the user expresses suicidal thoughts, self-harm, or severe distress.
+- LEGAL/ABUSE: If the user threatens legal action, mentions suing, or uses extreme profanity.
+- POLICY EXCEPTION: If the user requests a refund for an expert reading that was already completed (needs manual review).
 `;
